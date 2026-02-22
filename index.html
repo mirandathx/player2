@@ -2,8 +2,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Your Move, Player 2🌹</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<title>Your Move, Player 2</title></title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 <style>
 body{
   margin:0;
@@ -13,7 +13,7 @@ body{
   align-items:center;
   background:radial-gradient(circle at center,#ff00c8 0%,#ff7a00 40%,#111 80%);
   overflow:hidden;
-  font-family:'Press Start', cursive;
+  font-family:'VT323', monospace; /* 90s retro game font */
 }
 
 /* Animated vaporwave grid */
@@ -76,6 +76,7 @@ button{
   width:100%;
   font-size:12px;
   cursor:pointer;
+  font-family:'VT323', monospace;
 }
 
 button:hover{
@@ -120,6 +121,13 @@ button:hover{
 
 .inserted{ top:2px; }
 
+/* Screenshot mode */
+.screenshot-mode .grid{
+  display:none;
+}
+.screenshot-mode button{
+  display:none;
+}
 </style>
 </head>
 <body>
@@ -130,7 +138,7 @@ button:hover{
 
   <!-- START SCREEN -->
   <div id="startScreen">
-    <h1>YOUR MOVE, PLAYER 2🌹</h1>
+    <h1>YOUR MOVE, PLAYER 2</h1>
     <br>
     <p>INSERT COIN</p>
 
@@ -168,13 +176,8 @@ button:hover{
       <p>3. Do you want to go on a date soon?</p>
     </div>
 
-    <button onclick="addScore(30)">
-      PLAN DATE
-    </button>
-
-    <button onclick="endGame()">
-      END GAME
-    </button>
+    <button id="planButton">PLAN DATE</button>
+    <button onclick="endGame()">END GAME</button>
 
   </div>
 </div>
@@ -190,13 +193,19 @@ document.getElementById("startButton").addEventListener("click", function(){
   const sound = document.getElementById("coinSound");
 
   coin.classList.add("inserted");
-  sound.currentTime = 0; // reset sound
+  sound.currentTime = 0;
   sound.play();
 
   setTimeout(() => {
     document.getElementById("startScreen").classList.add("hidden");
     document.getElementById("gameScreen").classList.remove("hidden");
   }, 600);
+});
+
+// PLAN DATE BUTTON
+document.getElementById("planButton").addEventListener("click", function(){
+  addScore(30);
+  window.open("https://www.google.com/maps/search/date+ideas+near+me","_blank");
 });
 
 function toggleSection(id, points){
