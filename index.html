@@ -6,6 +6,7 @@
 <title>YOUR MOVE, PLAYER 2</title>
 
 <style>
+/* Arcade Classic font */
 @font-face {
   font-family: "ArcadeClassic";
   src: url("fonts/ArcadeClassic.woff2") format("woff2"),
@@ -45,12 +46,12 @@ body {
   to {background-position:0 40px;}
 }
 
-/* Arcade container responsive */
+/* Arcade container */
 .arcade {
-  width: 90vw;
-  height: 90vh;
+  width: 95vw;
   max-width: 520px;
-  max-height: 520px;
+  height: auto;
+  max-height: 95vh;
   background: black;
   border: 6px solid limegreen;
   box-shadow: 0 0 25px limegreen;
@@ -61,14 +62,23 @@ body {
   justify-content: flex-start;
   align-items: center;
   text-align: center;
-  position: relative;
-  z-index: 2;
   box-sizing: border-box;
   overflow: hidden;
 }
 
-h1 { font-size:28px; color:#ff7a00; text-shadow:2px 2px limegreen; margin-bottom:12px; }
-p { font-size:16px; }
+/* START SCREEN */
+#startScreen h1 {
+  font-size: 10vw; /* bigger title */
+  color: #ff7a00;
+  text-shadow: 3px 3px limegreen;
+  margin: 8px 0 16px 0;
+  line-height: 1.1;
+}
+
+#startScreen p {
+  font-size: 4vw;
+  margin-bottom: 16px;
+}
 
 button {
   background:black;
@@ -123,21 +133,22 @@ button:hover {
   align-items:flex-start;
   background:#111;
   border:2px solid limegreen;
-  padding:8px;
+  padding:10px;
   margin:6px 0;
-  width:100%;
-  max-height:35%;
+  width:90%;
+  max-height:40%;
   overflow-y:auto;
   box-sizing:border-box;
 }
 .prompt p { margin:4px 0; font-size:14px; }
 
-/* Mobile adjustments */
-@media (max-width: 400px){
-  h1 { font-size:5vw; }
-  p { font-size:3.5vw; }
+/* Mobile font scaling */
+@media (max-width: 450px){
+  h1 { font-size:12vw; }
+  p { font-size:4vw; }
   button { font-size:4vw; padding:8px; }
   .score { font-size:4vw; }
+  .scene { font-size:12vw; }
 }
 </style>
 </head>
@@ -148,7 +159,7 @@ button:hover {
 
   <!-- START SCREEN -->
   <div id="startScreen">
-    <h1>YOUR MOVE, PLAYER 2</h1>
+    <h1>YOUR MOVE,<br>PLAYER 2</h1>
     <p>INSERT COIN</p>
 
     <div class="coin-slot">
@@ -204,11 +215,9 @@ function insertCoin(){
 
 function togglePrompt(promptId){
   const prompt = document.getElementById(promptId);
-  // Close other prompts
   document.querySelectorAll('.prompt').forEach(p=>{
     if(p.id!==promptId) p.style.display='none';
   });
-  // Toggle this prompt
   prompt.style.display = (prompt.style.display==='flex')?'none':'flex';
 }
 
