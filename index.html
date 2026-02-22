@@ -6,11 +6,11 @@
 <title>YOUR MOVE, PLAYER 2</title>
 
 <style>
-/* NFG Arcade Classic font */
+/* Load Arcade Classic font from your local repo */
 @font-face {
   font-family: "ArcadeClassic";
-  src: url("ArcadeClassic.woff2") format("woff2"),
-       url("ArcadeClassic.woff") format("woff");
+  src: url("fonts/ArcadeClassic.woff2") format("woff2"),
+       url("fonts/ArcadeClassic.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
@@ -26,7 +26,7 @@ body {
   font-family:"ArcadeClassic", monospace;
 }
 
-/* Vaporwave grid */
+/* Vaporwave animated grid */
 .grid{
   position:fixed;
   bottom:0;
@@ -65,13 +65,7 @@ body {
   z-index:2;
 }
 
-h1 {
-  font-size:30px;
-  color:#ff7a00;
-  text-shadow:3px 3px limegreen;
-  margin-bottom:18px;
-}
-
+h1 { font-size:30px; color:#ff7a00; text-shadow:3px 3px limegreen; margin-bottom:18px; }
 p { font-size:18px; }
 
 button {
@@ -123,18 +117,22 @@ button:hover {
 
 .scene { font-size:60px; margin:20px 0; }
 
-/* Inline prompt panels */
+/* Inline prompts inside grid */
 .prompt {
+  display: none; /* hidden by default */
+  flex-direction: column;
+  justify-content:flex-start;
+  align-items:flex-start;
   background:#111;
-  border:2px solid limegreen;
+  border: 2px solid limegreen;
   padding:12px;
   margin:12px 0;
-  text-align:left;
   width:100%;
-  display:none;
-  flex-direction:column;
+  max-height:40%; /* prevents overflow of container */
+  overflow-y:auto; /* scroll if too tall */
 }
 .prompt p { margin:6px 0; font-size:16px; }
+
 </style>
 </head>
 
@@ -192,7 +190,7 @@ let score = 0;
 function insertCoin(){
   document.getElementById("coin").classList.add("inserted");
   document.getElementById("coinSound").play();
-  
+
   setTimeout(()=>{
     document.getElementById("startScreen").classList.add("hidden");
     document.getElementById("gameScreen").classList.remove("hidden");
@@ -201,9 +199,9 @@ function insertCoin(){
 
 function togglePrompt(promptId){
   const prompt = document.getElementById(promptId);
-  // Close any other prompts
+  // Close other prompts
   document.querySelectorAll('.prompt').forEach(p=>{
-    if(p.id !== promptId) p.style.display='none';
+    if(p.id!==promptId) p.style.display='none';
   });
   // Toggle this prompt
   prompt.style.display = (prompt.style.display==='flex')?'none':'flex';
