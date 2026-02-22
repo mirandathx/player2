@@ -17,7 +17,7 @@ body{
   font-family:'Press Start 2P', cursive;
 }
 
-/* Animated vaporwave grid */
+/* Vaporwave grid */
 .grid{
   position:fixed;
   bottom:0;
@@ -37,7 +37,7 @@ body{
   to{background-position:0 40px;}
 }
 
-/* Square cabinet */
+/* Arcade cabinet */
 .arcade{
   width:92vmin;
   height:92vmin;
@@ -46,7 +46,7 @@ body{
   background:black;
   border:6px solid limegreen;
   box-shadow:0 0 25px limegreen;
-  padding:30px;
+  padding:25px;
   color:white;
   display:flex;
   flex-direction:column;
@@ -60,12 +60,6 @@ h1{
   font-size:18px;
   color:#ff7a00;
   text-shadow:3px 3px limegreen;
-  margin-bottom:20px;
-}
-
-p{
-  font-size:12px;
-  line-height:1.6;
 }
 
 button{
@@ -73,7 +67,7 @@ button{
   border:4px solid #ff7a00;
   color:limegreen;
   padding:14px;
-  margin:10px 0;
+  margin:8px 0;
   width:100%;
   font-size:12px;
   cursor:pointer;
@@ -89,18 +83,18 @@ button:hover{
 .hidden{display:none;}
 
 .options{
-  margin-top:10px;
   font-size:11px;
+  margin-top:10px;
   line-height:1.8;
 }
 
 .score{
-  margin:15px 0;
+  margin:10px 0;
   font-size:12px;
   color:#ff7a00;
 }
 
-/* Coin */
+/* Coin slot */
 .coin-slot{
   width:70px;
   height:6px;
@@ -122,12 +116,10 @@ button:hover{
 
 .inserted{ top:2px; }
 
-/* Screenshot mode */
-.screenshot-mode .grid{
-  display:none;
-}
-.screenshot-mode button{
-  display:none;
+/* Pixel texting scene */
+.scene{
+  font-size:40px;
+  margin:15px 0;
 }
 </style>
 </head>
@@ -136,64 +128,71 @@ button:hover{
 
 <div class="grid"></div>
 
-<div class="arcade" id="arcade">
+<div class="arcade">
 
 <!-- START SCREEN -->
 <div id="startScreen">
   <h1>PLAYER 2: YOUR MOVE</h1>
-  <p>INSERT COIN</p>
+  <p>🪙 INSERT COIN</p>
 
   <div class="coin-slot">
     <div id="coin" class="coin"></div>
   </div>
 
-  <button onclick="insertCoin()">START GAME</button>
+  <button onclick="insertCoin()">🎮 START GAME</button>
 </div>
 
 <!-- GAME SCREEN -->
 <div id="gameScreen" class="hidden">
 
-  <h1>TALKING STAGE ACTIVE</h1>
+  <h1>💬 TALKING STAGE</h1>
 
-  <div class="score">
-    Score: Effort <span id="score">0</span>/100
+  <div class="scene">
+    👩📱   💬   📱👨
   </div>
 
-  <button onclick="toggleSection('compliments',20)">
-    GIVE COMPLIMENT
-  </button>
+  <div class="score">
+    ⭐ Effort: <span id="score">0</span>/100
+  </div>
+
+  <!-- Compliments -->
+  <button onclick="openSection('compliments',20)">💖 GIVE COMPLIMENT</button>
   <div id="compliments" class="options hidden">
     <p>1. I like how your brain works.</p>
     <p>2. You looked great in that photo.</p>
     <p>3. I thought of [thing] and it made me think of you.</p>
+    <button onclick="back()">⬅ BACK</button>
   </div>
 
-  <button onclick="toggleSection('questions',20)">
-    ASK QUESTION
-  </button>
+  <!-- Questions -->
+  <button onclick="openSection('questions',20)">❓ ASK QUESTION</button>
   <div id="questions" class="options hidden">
     <p>1. What did you get up to this weekend?</p>
     <p>2. What does your Costar say today?</p>
     <p>3. Do you want to go on a date soon?</p>
+    <button onclick="back()">⬅ BACK</button>
   </div>
 
-  <button onclick="addScore(30)">
-    PLAN DATE
-  </button>
+  <!-- Date -->
+  <button onclick="planDate()">📍 PLAN DATE</button>
 
-  <button onclick="endGame()">
-    END GAME
-  </button>
-
-  <button onclick="screenshotMode()">
-    SCREENSHOT MODE
-  </button>
+  <!-- End -->
+  <button onclick="endGame()">🚪 END GAME</button>
 
 </div>
 </div>
 
+<!-- Sounds -->
 <audio id="coinSound">
   <source src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3">
+</audio>
+
+<audio id="clickSound">
+  <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3">
+</audio>
+
+<audio id="bgMusic" loop>
+  <source src="https://assets.mixkit.co/active_storage/sfx/123/123-preview.mp3">
 </audio>
 
 <script>
@@ -205,23 +204,26 @@ function insertCoin(){
   setTimeout(()=>{
     document.getElementById("startScreen").classList.add("hidden");
     document.getElementById("gameScreen").classList.remove("hidden");
+    document.getElementById("bgMusic").play();
   },600);
 }
 
-function toggleSection(id,points){
+function openSection(id,points){
+  document.getElementById("clickSound").play();
+
   const sections=["compliments","questions"];
   sections.forEach(sec=>{
-    if(sec!==id){
-      document.getElementById(sec).classList.add("hidden");
-    }
+    document.getElementById(sec).classList.add("hidden");
   });
 
-  const el=document.getElementById(id);
-  el.classList.toggle("hidden");
+  document.getElementById(id).classList.remove("hidden");
+  addScore(points);
+}
 
-  if(!el.classList.contains("hidden")){
-    addScore(points);
-  }
+function back(){
+  document.getElementById("clickSound").play();
+  document.getElementById("compliments").classList.add("hidden");
+  document.getElementById("questions").classList.add("hidden");
 }
 
 function addScore(points){
@@ -230,12 +232,14 @@ function addScore(points){
   document.getElementById("score").innerText=score;
 }
 
-function endGame(){
-  window.open("https://www.wikihow.com/Be-Single-and-Happy","_blank");
+function planDate(){
+  document.getElementById("clickSound").play();
+  addScore(30);
+  window.open("https://www.google.com/maps/search/date+ideas+near+me","_blank");
 }
 
-function screenshotMode(){
-  document.body.classList.toggle("screenshot-mode");
+function endGame(){
+  window.open("https://www.wikihow.com/Be-Single-and-Happy","_blank");
 }
 </script>
 
