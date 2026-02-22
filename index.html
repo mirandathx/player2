@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YOUR MOVE PLAYER 2</title>
+<title>YOUR MOVE, PLAYER 2</title>
 
-<!-- Pixel arcade font -->
 <style>
+/* NFG 8-bit arcade font */
 @font-face {
-  font-family: 'PixelArcade';
-  src: url('https://cdnjs.cloudflare.com/ajax/libs/arcade-font/1.4.0/ARCADECLASSIC.woff2') format('woff2'),
-       url('https://cdnjs.cloudflare.com/ajax/libs/arcade-font/1.4.0/ARCADECLASSIC.woff') format('woff');
+  font-family: "YourArcadeFont";
+  src: url("8bitoperator.woff2") format("woff2"),
+       url("8bitoperator.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
@@ -23,7 +23,7 @@ body {
   align-items:center;
   background:radial-gradient(circle at center,#ff00c8 0%,#ff7a00 40%,#111 80%);
   overflow:hidden;
-  font-family:'PixelArcade', monospace;
+  font-family:"YourArcadeFont", monospace;
 }
 
 /* Vaporwave grid */
@@ -46,7 +46,7 @@ body {
   to {background-position:0 40px;}
 }
 
-/* Arcade screen */
+/* Arcade container */
 .arcade {
   width:94vmin;
   height:94vmin;
@@ -72,9 +72,7 @@ h1 {
   margin-bottom:18px;
 }
 
-p {
-  font-size:18px;
-}
+p { font-size:18px; }
 
 button {
   background:black;
@@ -85,7 +83,7 @@ button {
   width:100%;
   font-size:18px;
   cursor:pointer;
-  font-family:'PixelArcade', monospace;
+  font-family:"YourArcadeFont", monospace;
 }
 
 button:hover {
@@ -95,12 +93,6 @@ button:hover {
 }
 
 .hidden {display:none;}
-
-.options {
-  font-size:17px;
-  margin-top:12px;
-  line-height:2;
-}
 
 .score {
   margin:14px 0;
@@ -129,49 +121,62 @@ button:hover {
 
 .inserted { top:3px; }
 
-.scene {
-  font-size:60px;
-  margin:20px 0;
+.scene { font-size:60px; margin:20px 0; }
+
+/* Full screen overlays */
+.overlay {
+  position: fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  background: radial-gradient(circle at center,#ff00c8 0%,#ff7a00 40%,#111 80%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  color:white;
+  text-align: center;
+  padding: 20px;
+  font-family:"YourArcadeFont", monospace;
 }
 </style>
 </head>
 
 <body>
-
 <div class="grid"></div>
 
-<div class="arcade">
+<!-- Arcade Container -->
+<div class="arcade" id="gameContainer">
 
-<!-- START SCREEN -->
-<div id="startScreen">
-  <h1>YOUR MOVE, PLAYER 2</h1>
-  <p>INSERT COIN</p>
+  <!-- START SCREEN -->
+  <div id="startScreen">
+    <h1>YOUR MOVE, PLAYER 2</h1>
+    <p>INSERT COIN</p>
 
-  <div class="coin-slot">
-    <div id="coin" class="coin"></div>
+    <div class="coin-slot">
+      <div id="coin" class="coin"></div>
+    </div>
+
+    <button onclick="insertCoin()">START GAME</button>
   </div>
 
-  <button onclick="insertCoin()">START GAME</button>
-</div>
+  <!-- MAIN GAME SCREEN -->
+  <div id="gameScreen" class="hidden">
+    <h1>TALKING STAGE</h1>
+    <div class="scene">👩📱 💬 📱👨</div>
+    <div class="score">Effort: <span id="score">0</span>/100</div>
 
-<!-- MAIN GAME SCREEN -->
-<div id="gameScreen" class="hidden">
-  <h1>TALKING STAGE</h1>
-
-  <div class="scene">👩📱 💬 📱👨</div>
-
-  <div class="score">
-    Effort: <span id="score">0</span>/100
+    <button onclick="openOverlay('complimentScreen')">GIVE COMPLIMENT</button>
+    <button onclick="openOverlay('questionScreen')">ASK QUESTION</button>
+    <button onclick="planDate()">PLAN DATE</button>
+    <button onclick="endGame()">END GAME</button>
   </div>
-
-  <button onclick="openOverlay('complimentScreen')">GIVE COMPLIMENT</button>
-  <button onclick="openOverlay('questionScreen')">ASK QUESTION</button>
-  <button onclick="planDate()">PLAN DATE</button>
-  <button onclick="endGame()">END GAME</button>
 </div>
 
-<!-- FULL-SCREEN OVERLAYS -->
-<div id="complimentScreen" class="hidden arcade">
+<!-- FULL SCREEN OVERLAYS -->
+<div id="complimentScreen" class="overlay hidden">
   <h1>GIVE COMPLIMENT</h1>
   <p>1. I like how your brain works.</p>
   <p>2. You looked great in that photo.</p>
@@ -179,14 +184,12 @@ button:hover {
   <button onclick="closeOverlay()">BACK</button>
 </div>
 
-<div id="questionScreen" class="hidden arcade">
+<div id="questionScreen" class="overlay hidden">
   <h1>ASK QUESTION</h1>
   <p>1. What did you get up to this weekend?</p>
   <p>2. What does your Costar say today?</p>
   <p>3. Do you want to go on a date soon?</p>
   <button onclick="closeOverlay()">BACK</button>
-</div>
-
 </div>
 
 <!-- SOUND EFFECTS -->
@@ -207,30 +210,29 @@ button:hover {
 </audio>
 
 <script>
-let score=0;
+let score = 0;
 
 function insertCoin(){
   document.getElementById("coin").classList.add("inserted");
   document.getElementById("coinSound").play();
-  
+
   setTimeout(()=>{
     document.getElementById("startScreen").classList.add("hidden");
     document.getElementById("gameScreen").classList.remove("hidden");
-    
-    // Start vaporwave background music
+
+    // Play vaporwave background music
     const bgMusic = document.getElementById("bgMusic");
-    bgMusic.volume = 0.25; // adjust volume as needed
+    bgMusic.volume = 0.25;
     bgMusic.play();
-    
+
   },600);
 }
 
 function openOverlay(screenId){
   document.getElementById("clickSound").play();
-  document.getElementById("gameScreen").classList.add("hidden");
   document.getElementById(screenId).classList.remove("hidden");
+  document.getElementById("gameScreen").classList.add("hidden");
 
-  // Anime giggle sound
   if(screenId === "complimentScreen") document.getElementById("complimentSound").play();
   if(screenId === "questionScreen") document.getElementById("questionSound").play();
 }
@@ -243,9 +245,9 @@ function closeOverlay(){
 }
 
 function addScore(points){
-  score+=points;
-  if(score>100) score=100;
-  document.getElementById("score").innerText=score;
+  score += points;
+  if(score>100) score = 100;
+  document.getElementById("score").innerText = score;
 }
 
 function planDate(){
@@ -258,6 +260,5 @@ function endGame(){
   window.open("https://www.wikihow.com/Be-Single-and-Happy","_blank");
 }
 </script>
-
 </body>
 </html>
