@@ -233,6 +233,51 @@ function endGame(){
 
 function screenshotMode(){
   document.body.classList.toggle("screenshot-mode");
+
+  <script>
+let score=0;
+
+function insertCoin(){
+  document.getElementById("coin").classList.add("inserted");
+  document.getElementById("coinSound").play();
+  setTimeout(()=>{
+    document.getElementById("startScreen").classList.add("hidden");
+    document.getElementById("gameScreen").classList.remove("hidden");
+  },600);
+}
+
+function openSection(id,points){
+  document.getElementById("clickSound").play();
+
+  const sections=["compliments","questions"];
+  sections.forEach(sec=>{
+    document.getElementById(sec).classList.add("hidden");
+  });
+
+  document.getElementById(id).classList.remove("hidden");
+  addScore(points);
+}
+
+function back(){
+  document.getElementById("clickSound").play();
+  document.getElementById("compliments").classList.add("hidden");
+  document.getElementById("questions").classList.add("hidden");
+}
+
+function addScore(points){
+  score+=points;
+  if(score>100) score=100;
+  document.getElementById("score").innerText=score;
+}
+
+function planDate(){
+  document.getElementById("clickSound").play();
+  addScore(30);
+  window.open("https://www.google.com/maps/search/date+ideas+near+me","_blank");
+}
+}
+</script>
+
 }
 </script>
 
