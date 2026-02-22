@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Player 2: Your Move</title>
+<title>YOUR MOVE, PLAYER 2</title>
 
-<!-- True pixel arcade font -->
+<!-- Pixel arcade font -->
 <style>
 @font-face {
   font-family: 'PixelArcade';
@@ -46,7 +46,7 @@ body {
   to {background-position:0 40px;}
 }
 
-/* Arcade square */
+/* Arcade screen */
 .arcade {
   width:94vmin;
   height:94vmin;
@@ -65,21 +65,17 @@ body {
   z-index:2;
 }
 
-/* Headings */
 h1 {
   font-size:30px;
   color:#ff7a00;
   text-shadow:3px 3px limegreen;
   margin-bottom:18px;
-  font-family:'PixelArcade', monospace;
 }
 
-/* Paragraph text */
 p {
   font-size:18px;
 }
 
-/* Buttons */
 button {
   background:black;
   border:4px solid #ff7a00;
@@ -133,7 +129,6 @@ button:hover {
 
 .inserted { top:3px; }
 
-/* Pixel texting scene */
 .scene {
   font-size:60px;
   margin:20px 0;
@@ -147,54 +142,54 @@ button:hover {
 
 <div class="arcade">
 
-<!-- START -->
+<!-- START SCREEN -->
 <div id="startScreen">
-  <h1>PLAYER 2: YOUR MOVE</h1>
-  <p>🪙 INSERT COIN</p>
+  <h1>YOUR MOVE, PLAYER 2</h1>
+  <p>INSERT COIN</p>
 
   <div class="coin-slot">
     <div id="coin" class="coin"></div>
   </div>
 
-  <button onclick="insertCoin()">🎮 START GAME</button>
+  <button onclick="insertCoin()">START GAME</button>
 </div>
 
-<!-- GAME -->
+<!-- MAIN GAME SCREEN -->
 <div id="gameScreen" class="hidden">
+  <h1>TALKING STAGE</h1>
 
-  <h1>💬 TALKING STAGE</h1>
-
-  <div class="scene">
-    👩📱   💬   📱👨
-  </div>
+  <div class="scene">👩📱 💬 📱👨</div>
 
   <div class="score">
-    ⭐ Effort: <span id="score">0</span>/100
+    Effort: <span id="score">0</span>/100
   </div>
 
-  <button onclick="openSection('compliments',20)">💖 GIVE COMPLIMENT</button>
-  <div id="compliments" class="options hidden">
-    <p>1. I like how your brain works.</p>
-    <p>2. You looked great in that photo.</p>
-    <p>3. I thought of [thing] and it made me think of you.</p>
-    <button onclick="back()">⬅ BACK</button>
-  </div>
-
-  <button onclick="openSection('questions',20)">❓ ASK QUESTION</button>
-  <div id="questions" class="options hidden">
-    <p>1. What did you get up to this weekend?</p>
-    <p>2. What does your Costar say today?</p>
-    <p>3. Do you want to go on a date soon?</p>
-    <button onclick="back()">⬅ BACK</button>
-  </div>
-
-  <button onclick="planDate()">📍 PLAN DATE</button>
-  <button onclick="endGame()">🚪 END GAME</button>
-
-</div>
+  <button onclick="openOverlay('complimentScreen')">GIVE COMPLIMENT</button>
+  <button onclick="openOverlay('questionScreen')">ASK QUESTION</button>
+  <button onclick="planDate()">PLAN DATE</button>
+  <button onclick="endGame()">END GAME</button>
 </div>
 
-<!-- Sound effects -->
+<!-- FULL-SCREEN OVERLAYS -->
+<div id="complimentScreen" class="hidden arcade">
+  <h1>GIVE COMPLIMENT</h1>
+  <p>1. I like how your brain works.</p>
+  <p>2. You looked great in that photo.</p>
+  <p>3. I thought of [thing] and it made me think of you.</p>
+  <button onclick="closeOverlay()">BACK</button>
+</div>
+
+<div id="questionScreen" class="hidden arcade">
+  <h1>ASK QUESTION</h1>
+  <p>1. What did you get up to this weekend?</p>
+  <p>2. What does your Costar say today?</p>
+  <p>3. Do you want to go on a date soon?</p>
+  <button onclick="closeOverlay()">BACK</button>
+</div>
+
+</div>
+
+<!-- SOUND EFFECTS -->
 <audio id="coinSound">
   <source src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3">
 </audio>
@@ -220,26 +215,21 @@ function insertCoin(){
   },600);
 }
 
-function openSection(id,points){
+function openOverlay(screenId){
   document.getElementById("clickSound").play();
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById(screenId).classList.remove("hidden");
 
-  const sections=["compliments","questions"];
-  sections.forEach(sec=>{
-    document.getElementById(sec).classList.add("hidden");
-  });
-
-  document.getElementById(id).classList.remove("hidden");
-  addScore(points);
-
-  // Play giggle sounds
-  if(id==="compliments") document.getElementById("complimentSound").play();
-  if(id==="questions") document.getElementById("questionSound").play();
+  // Anime giggle sound
+  if(screenId === "complimentScreen") document.getElementById("complimentSound").play();
+  if(screenId === "questionScreen") document.getElementById("questionSound").play();
 }
 
-function back(){
+function closeOverlay(){
   document.getElementById("clickSound").play();
-  document.getElementById("compliments").classList.add("hidden");
-  document.getElementById("questions").classList.add("hidden");
+  document.getElementById("complimentScreen").classList.add("hidden");
+  document.getElementById("questionScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
 }
 
 function addScore(points){
