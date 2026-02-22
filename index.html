@@ -1,0 +1,111 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html>\
+<head>\
+<meta charset="UTF-8">\
+<title>Player 2: Your Move</title>\
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">\
+\
+<style>\
+body \{\
+  background-color: black;\
+  color: #00ff99;\
+  font-family: 'Press Start 2P', cursive;\
+  text-align: center;\
+  padding: 30px;\
+\}\
+\
+h1 \{\
+  font-size: 18px;\
+  margin-bottom: 30px;\
+\}\
+\
+button \{\
+  background-color: black;\
+  border: 3px solid #00ff99;\
+  color: #00ff99;\
+  padding: 15px;\
+  margin: 10px;\
+  font-family: 'Press Start 2P', cursive;\
+  font-size: 10px;\
+  cursor: pointer;\
+  width: 90%;\
+  max-width: 300px;\
+\}\
+\
+button:hover \{\
+  background-color: #00ff99;\
+  color: black;\
+\}\
+\
+.hidden \{\
+  display: none;\
+\}\
+\
+.option-box \{\
+  margin-top: 20px;\
+  font-size: 10px;\
+\}\
+</style>\
+</head>\
+\
+<body>\
+\
+<h1>\uc0\u55356 \u57262  Player 2: Your Move</h1>\
+\
+<p>Talking Stage Detected.<br>Complete tasks to continue.</p>\
+\
+<div id="menu">\
+  <button onclick="showSection('compliment')">GIVE A COMPLIMENT</button>\
+  <button onclick="showSection('question')">ASK A QUESTION</button>\
+  <button onclick="openMap()">DATE IDEA</button>\
+  <button onclick="showSection('end')">END GAME</button>\
+</div>\
+\
+<div id="compliment" class="hidden option-box">\
+  <p>Choose one and send it:</p>\
+  <p>1. I really like how your brain works.</p>\
+  <p>2. You looked unreal the other night.</p>\
+  <p>3. You have calming energy.</p>\
+  <button onclick="goBack()">BACK</button>\
+</div>\
+\
+<div id="question" class="hidden option-box">\
+  <p>Ask one:</p>\
+  <p>1. What are you working towards this year?</p>\
+  <p>2. What\'92s your ideal Sunday?</p>\
+  <p>3. What\'92s something people misunderstand about you?</p>\
+  <button onclick="goBack()">BACK</button>\
+</div>\
+\
+<div id="end" class="hidden option-box">\
+  <p>Player 2 inactive.</p>\
+  <p>Returning to Main Character Mode.</p>\
+  <button onclick="window.location.href='single.html'">WHY BE SINGLE?</button>\
+  <button onclick="goBack()">BACK</button>\
+</div>\
+\
+<script>\
+function showSection(sectionId) \{\
+  document.getElementById("menu").style.display = "none";\
+  document.getElementById(sectionId).style.display = "block";\
+\}\
+\
+function goBack() \{\
+  document.querySelectorAll(".option-box").forEach(box => box.style.display = "none");\
+  document.getElementById("menu").style.display = "block";\
+\}\
+\
+function openMap() \{\
+  window.open("https://www.google.com/maps/search/date+ideas+near+me");\
+\}\
+</script>\
+\
+</body>\
+</html>}
