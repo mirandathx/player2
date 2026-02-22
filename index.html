@@ -6,140 +6,254 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
 <style>
-
-/* 🌅 Vaporwave Background */
 body {
-  margin: 0;
-  padding: 40px 20px;
-  font-family: 'Press Start 2P', cursive;
-  background: linear-gradient(180deg, #ff7a00 0%, #ff00c8 40%, #1a1a1a 100%);
-  background-attachment: fixed;
-  color: white;
-  text-align: center;
+  margin:0;
+  padding:0;
+  font-family:'Press Start 2P', cursive;
+  background:linear-gradient(180deg,#ff7a00 0%,#ff00c8 45%,#111 100%);
+  color:white;
+  text-align:center;
+  overflow:hidden;
 }
 
-/* 🟧 Pixel Card Container */
-.container {
-  background: rgba(0,0,0,0.85);
-  border: 6px solid limegreen;
-  box-shadow: 0 0 20px limegreen;
-  padding: 30px 20px;
-  max-width: 420px;
-  margin: auto;
+/* CRT scanlines */
+body::after{
+  content:"";
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:repeating-linear-gradient(
+    rgba(0,0,0,0.25) 0px,
+    rgba(0,0,0,0.25) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  pointer-events:none;
 }
 
-/* 🎮 Title */
-h1 {
-  font-size: 16px;
-  color: #ff7a00;
-  text-shadow: 3px 3px limegreen;
-  animation: blink 1.2s infinite;
+.screen{
+  margin:60px auto;
+  background:rgba(0,0,0,0.9);
+  border:6px solid limegreen;
+  box-shadow:0 0 25px limegreen;
+  padding:30px 20px;
+  max-width:420px;
+  position:relative;
 }
 
-/* ✨ Blinking Animation */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+h1{
+  font-size:13px;
+  color:#ff7a00;
+  text-shadow:3px 3px limegreen;
 }
 
-/* 🕹️ Buttons */
-button {
-  background: black;
-  border: 4px solid #ff7a00;
-  color: limegreen;
-  padding: 14px;
-  margin: 12px 0;
-  width: 100%;
-  font-family: 'Press Start 2P', cursive;
-  font-size: 9px;
-  cursor: pointer;
-  transition: 0.2s;
+button{
+  background:black;
+  border:4px solid #ff7a00;
+  color:limegreen;
+  padding:14px;
+  margin:10px 0;
+  width:100%;
+  font-size:8px;
+  font-family:'Press Start 2P', cursive;
+  cursor:pointer;
 }
 
-button:hover {
-  background: limegreen;
-  color: black;
-  box-shadow: 0 0 15px limegreen;
+button:hover{
+  background:limegreen;
+  color:black;
+  box-shadow:0 0 15px limegreen;
 }
 
-/* 🔲 Sections */
-.hidden {
-  display: none;
+.hidden{display:none;}
+
+.meter{
+  background:black;
+  border:3px solid white;
+  height:20px;
+  margin:15px 0;
 }
 
-.option-box {
-  margin-top: 20px;
-  font-size: 9px;
-  line-height: 1.8;
+.fill{
+  height:100%;
+  width:0%;
+  background:limegreen;
+  transition:width 0.4s;
 }
 
-/* ⚡ Footer */
-.footer {
-  margin-top: 20px;
-  font-size: 8px;
-  color: #ff7a00;
+.popup{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:black;
+  border:3px solid #ff7a00;
+  padding:10px;
+  font-size:8px;
+  display:none;
 }
 
+.glitch{
+  animation:glitch 0.2s infinite;
+}
+
+@keyframes glitch{
+  0%{transform:translate(1px,-1px);}
+  50%{transform:translate(-1px,1px);}
+  100%{transform:translate(0);}
+}
+
+.heart{
+  position:fixed;
+  color:hotpink;
+  animation:floatUp 2s linear forwards;
+}
+
+@keyframes floatUp{
+  from{opacity:1; transform:translateY(0);}
+  to{opacity:0; transform:translateY(-150px);}
+}
+
+/* Insert coin screen */
+#startScreen{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:black;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+
+.blink{
+  animation:blink 1s infinite;
+}
+
+@keyframes blink{
+  0%,100%{opacity:1;}
+  50%{opacity:0.3;}
+}
 </style>
 </head>
 
 <body>
 
-<div class="container">
-
-<h1>🎮 PLAYER 2: YOUR MOVE</h1>
-
-<p>⚠ TALKING STAGE DETECTED ⚠<br>Complete tasks to continue.</p>
-
-<div id="menu">
-  <button onclick="showSection('compliment')">GIVE A COMPLIMENT</button>
-  <button onclick="showSection('question')">ASK A QUESTION</button>
-  <button onclick="openMap()">DATE IDEA</button>
-  <button onclick="showSection('end')">END GAME</button>
+<div id="startScreen">
+  <h1>PLAYER 2: YOUR MOVE</h1>
+  <p class="blink">INSERT COIN</p>
+  <button onclick="startGame()">START</button>
 </div>
 
-<div id="compliment" class="hidden option-box">
-  <p>SELECT & SEND:</p>
-  <p>1. I really like how your brain works.</p>
-  <p>2. You looked unreal the other night.</p>
-  <p>3. You have calming energy.</p>
-  <button onclick="goBack()">BACK TO MENU</button>
+<div class="screen hidden" id="gameScreen">
+  <h1>TALKING STAGE ACTIVE</h1>
+
+  <div class="meter">
+    <div id="effortBar" class="fill"></div>
+  </div>
+
+  <p>Consistency Score: <span id="score">0</span></p>
+  <p>Response Timer: <span id="timer">30</span>s</p>
+
+  <button onclick="task('compliment')">GIVE COMPLIMENT</button>
+  <button onclick="task('question')">ASK QUESTION</button>
+  <button onclick="dateMode()">PLAN DATE</button>
+  <button onclick="endGame()">END GAME</button>
 </div>
 
-<div id="question" class="hidden option-box">
-  <p>SELECT & ASK:</p>
-  <p>1. What are you working towards this year?</p>
-  <p>2. What’s your ideal Sunday?</p>
-  <p>3. What’s something people misunderstand about you?</p>
-  <button onclick="goBack()">BACK TO MENU</button>
-</div>
+<div id="popup" class="popup"></div>
 
-<div id="end" class="hidden option-box">
-  <p>⚡ PLAYER 2 INACTIVE ⚡</p>
-  <p>RETURNING TO MAIN CHARACTER MODE</p>
-  <button onclick="window.location.href='single.html'">WHY BE SINGLE?</button>
-  <button onclick="goBack()">BACK</button>
-</div>
-
-<div class="footer">
-  SEND TO PLAYER 2 WHEN EFFORT DROPS.
-</div>
-
-</div>
+<audio id="clickSound">
+  <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3">
+</audio>
 
 <script>
-function showSection(sectionId) {
-  document.getElementById("menu").style.display = "none";
-  document.getElementById(sectionId).style.display = "block";
+let effort = localStorage.getItem("effort") || 0;
+let score = localStorage.getItem("score") || 0;
+let timer = 30;
+let timerInterval;
+
+document.getElementById("effortBar").style.width = effort + "%";
+document.getElementById("score").innerText = score;
+
+function startGame(){
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
+  startTimer();
 }
 
-function goBack() {
-  document.querySelectorAll(".option-box").forEach(box => box.style.display = "none");
-  document.getElementById("menu").style.display = "block";
+function playSound(){
+  document.getElementById("clickSound").play();
 }
 
-function openMap() {
+function task(type){
+  playSound();
+  effort = parseInt(effort) + 20;
+  score = parseInt(score) + 10;
+  if(effort > 100) effort = 100;
+
+  updateStats();
+  popup("ACHIEVEMENT UNLOCKED");
+  heart();
+
+  if(effort < 25){
+    npcMode();
+  }
+}
+
+function dateMode(){
+  playSound();
+  effort = parseInt(effort) + 30;
+  score = parseInt(score) + 20;
+  updateStats();
+  popup("DATE MODE ACTIVATED");
   window.open("https://www.google.com/maps/search/date+ideas+near+me");
+}
+
+function updateStats(){
+  document.getElementById("effortBar").style.width = effort + "%";
+  document.getElementById("score").innerText = score;
+  localStorage.setItem("effort", effort);
+  localStorage.setItem("score", score);
+}
+
+function popup(text){
+  let p = document.getElementById("popup");
+  p.innerText = text;
+  p.style.display = "block";
+  setTimeout(()=>p.style.display="none",2000);
+}
+
+function heart(){
+  let h = document.createElement("div");
+  h.className="heart";
+  h.innerText="❤";
+  h.style.left=Math.random()*window.innerWidth+"px";
+  h.style.bottom="0px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),2000);
+}
+
+function startTimer(){
+  timerInterval = setInterval(()=>{
+    timer--;
+    document.getElementById("timer").innerText = timer;
+    if(timer <= 0){
+      npcMode();
+    }
+  },1000);
+}
+
+function npcMode(){
+  popup("NPC MODE ACTIVATED");
+  document.querySelector(".screen").classList.add("glitch");
+  setTimeout(()=>{
+    window.location.href="single.html";
+  },2000);
+}
+
+function endGame(){
+  npcMode();
 }
 </script>
 
