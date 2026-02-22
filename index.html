@@ -2,8 +2,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Player 2: Your Move</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
 <style>
 body{
   margin:0;
@@ -14,29 +16,9 @@ body{
   background:radial-gradient(circle at center,#ff00c8 0%,#ff7a00 40%,#111 80%);
   overflow:hidden;
   font-family:'Press Start 2P', monospace;
-  font-size:16px;
 }
 
-/* Responsive font scaling */
-@media (max-width:600px){
-  body{ font-size:18px; }
-  .arcade{ width:95vmin; height:95vmin; padding:1.5rem; }
-  button{ font-size:1.5rem; padding:1.5rem; }
-  h1{ font-size:2.5rem; }
-  .score{ font-size:1.5rem; }
-  .coin-slot{ width:90px; height:12px; }
-  .coin{ width:30px; height:30px; top:-40px; left:30px; }
-  .sprites img{ width:60px; height:60px; margin:0 5px; }
-}
-
-@media (min-width:901px){
-  body{ font-size:22px; }
-  h1{ font-size:3rem; }
-  button{ font-size:1.3rem; padding:1.2rem; }
-  .score{ font-size:1.6rem; }
-  .sprites img{ width:80px; height:80px; margin:0 10px; }
-}
-
+/* Vaporwave grid */
 .grid{
   position:fixed;
   bottom:0;
@@ -56,44 +38,50 @@ body{
   to{background-position:0 40px;}
 }
 
+/* Arcade square */
 .arcade{
-  width:90vmin;
-  height:90vmin;
+  width:94vmin;
+  height:94vmin;
   max-width:520px;
   max-height:520px;
   background:black;
   border:6px solid limegreen;
   box-shadow:0 0 25px limegreen;
-  padding:2rem;
-  text-align:center;
+  padding:30px;
   color:white;
   display:flex;
   flex-direction:column;
   justify-content:center;
-  align-items:center;
+  text-align:center;
+  position:relative;
+  z-index:2;
 }
 
+/* Headings */
 h1{
-  font-size:2rem;
+  font-size:28px;
   color:#ff7a00;
-  text-shadow:2px 2px limegreen;
-  margin-bottom:1rem;
+  text-shadow:3px 3px limegreen;
+  margin-bottom:18px;
 }
 
+/* Paragraph text */
 p{
-  font-size:1rem;
-  margin:0.4rem 0;
+  font-size:16px;
+  line-height:1.8;
 }
 
+/* Buttons */
 button{
   background:black;
   border:4px solid #ff7a00;
   color:limegreen;
+  padding:18px;
+  margin:10px 0;
   width:100%;
-  margin:0.5rem 0;
-  font-family:'Press Start 2P', monospace;
+  font-size:16px;
   cursor:pointer;
-  transition: all 0.2s ease;
+  font-family:'Press Start 2P', monospace;
 }
 
 button:hover{
@@ -105,23 +93,24 @@ button:hover{
 .hidden{display:none;}
 
 .options{
-  margin-top:0.8rem;
-  line-height:1.5;
+  font-size:15px;
+  margin-top:12px;
+  line-height:2;
 }
 
 .score{
-  margin:1rem 0;
-  font-size:1.2rem;
+  margin:14px 0;
+  font-size:18px;
   color:#ff7a00;
 }
 
+/* Coin slot */
 .coin-slot{
-  width:70px;
-  height:10px;
+  width:80px;
+  height:8px;
   background:#333;
-  margin:20px auto;
+  margin:24px auto;
   position:relative;
-  border-radius:4px;
 }
 
 .coin{
@@ -130,21 +119,17 @@ button:hover{
   background:orange;
   border-radius:50%;
   position:absolute;
-  top:-35px;
-  left:23px;
+  top:-34px;
+  left:28px;
   transition:0.6s;
 }
 
-.inserted{ top:2px; }
+.inserted{ top:3px; }
 
-.sprites{
-  display:flex;
-  justify-content:center;
-  align-items:flex-end;
-  margin-bottom:1rem;
-}
-.sprites img{
-  display:block;
+/* Pixel texting scene */
+.scene{
+  font-size:56px;
+  margin:18px 0;
 }
 </style>
 </head>
@@ -155,96 +140,106 @@ button:hover{
 
 <div class="arcade">
 
-  <!-- START SCREEN -->
-  <div id="startScreen">
-    <h1>PLAYER 2: YOUR MOVE</h1>
-    <p>INSERT COIN</p>
+<!-- START -->
+<div id="startScreen">
+  <h1>PLAYER 2: YOUR MOVE</h1>
+  <p>🪙 INSERT COIN</p>
 
-    <div class="sprites">
-      <img src="https://i.ibb.co/f0J7qPx/8bit-man.png" alt="8-bit man">
-      <img src="https://i.ibb.co/5YnHqKv/8bit-woman.png" alt="8-bit woman">
-    </div>
-
-    <div class="coin-slot">
-      <div id="coin" class="coin"></div>
-    </div>
-
-    <button id="startButton">START GAME</button>
+  <div class="coin-slot">
+    <div id="coin" class="coin"></div>
   </div>
 
-  <!-- GAME SCREEN -->
-  <div id="gameScreen" class="hidden">
-    <h1>TALKING STAGE ACTIVE</h1>
-
-    <div class="sprites">
-      <img src="https://i.ibb.co/f0J7qPx/8bit-man.png" alt="8-bit man">
-      <img src="https://i.ibb.co/5YnHqKv/8bit-woman.png" alt="8-bit woman">
-    </div>
-
-    <div class="score">Score: Effort <span id="score">0</span>/100</div>
-
-    <button onclick="toggleSection('compliments',20)">GIVE COMPLIMENT</button>
-    <div id="compliments" class="options hidden">
-      <p>1. I like how your brain works.</p>
-      <p>2. You looked great in that photo.</p>
-      <p>3. I thought of [thing] and it made me think of you.</p>
-    </div>
-
-    <button onclick="toggleSection('questions',20)">ASK QUESTION</button>
-    <div id="questions" class="options hidden">
-      <p>1. What did you get up to this weekend?</p>
-      <p>2. What does your Costar say today?</p>
-      <p>3. Do you want to go on a date soon?</p>
-    </div>
-
-    <button id="planButton">PLAN DATE</button>
-    <button onclick="endGame()">END GAME</button>
-  </div>
-
+  <button onclick="insertCoin()">🎮 START GAME</button>
 </div>
 
-<audio id="coinSound" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"></audio>
+<!-- GAME -->
+<div id="gameScreen" class="hidden">
+
+  <h1>💬 TALKING STAGE</h1>
+
+  <div class="scene">
+    👩📱   💬   📱👨
+  </div>
+
+  <div class="score">
+    ⭐ Effort: <span id="score">0</span>/100
+  </div>
+
+  <button onclick="openSection('compliments',20)">💖 GIVE COMPLIMENT</button>
+  <div id="compliments" class="options hidden">
+    <p>1. I like how your brain works.</p>
+    <p>2. You looked great in that photo.</p>
+    <p>3. I thought of [thing] and it made me think of you.</p>
+    <button onclick="back()">⬅ BACK</button>
+  </div>
+
+  <button onclick="openSection('questions',20)">❓ ASK QUESTION</button>
+  <div id="questions" class="options hidden">
+    <p>1. What did you get up to this weekend?</p>
+    <p>2. What does your Costar say today?</p>
+    <p>3. Do you want to go on a date soon?</p>
+    <button onclick="back()">⬅ BACK</button>
+  </div>
+
+  <button onclick="planDate()">📍 PLAN DATE</button>
+  <button onclick="endGame()">🚪 END GAME</button>
+
+</div>
+</div>
+
+<!-- Sound effects only -->
+<audio id="coinSound">
+  <source src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3">
+</audio>
+
+<audio id="clickSound">
+  <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3">
+</audio>
 
 <script>
-let score = 0;
+let score=0;
 
-// Start game
-document.getElementById("startButton").addEventListener("click", function(){
-  const coin = document.getElementById("coin");
-  const sound = document.getElementById("coinSound");
-  coin.classList.add("inserted");
-  sound.currentTime = 0;
-  sound.play();
-  setTimeout(() => {
+function insertCoin(){
+  document.getElementById("coin").classList.add("inserted");
+  document.getElementById("coinSound").play();
+  setTimeout(()=>{
     document.getElementById("startScreen").classList.add("hidden");
     document.getElementById("gameScreen").classList.remove("hidden");
-  }, 600);
-});
+  },600);
+}
 
-// Plan date button
-document.getElementById("planButton").addEventListener("click", function(){
-  addScore(30);
-  window.open("https://www.google.com/maps/search/date+ideas+near+me", "_blank");
-});
+function openSection(id,points){
+  document.getElementById("clickSound").play();
 
-// Toggle sections
-function toggleSection(id, points){
   const sections=["compliments","questions"];
-  sections.forEach(sec => document.getElementById(sec).classList.add("hidden"));
-  const el = document.getElementById(id);
-  el.classList.toggle("hidden");
-  if(!el.classList.contains("hidden")) addScore(points);
+  sections.forEach(sec=>{
+    document.getElementById(sec).classList.add("hidden");
+  });
+
+  document.getElementById(id).classList.remove("hidden");
+  addScore(points);
 }
 
-// Add score
+function back(){
+  document.getElementById("clickSound").play();
+  document.getElementById("compliments").classList.add("hidden");
+  document.getElementById("questions").classList.add("hidden");
+}
+
 function addScore(points){
-  score = Math.min(score+points, 100);
-  document.getElementById("score").innerText = score;
+  score+=points;
+  if(score>100) score=100;
+  document.getElementById("score").innerText=score;
 }
 
-// End game
+function planDate(){
+  document.getElementById("clickSound").play();
+  addScore(30);
+  window.open("https://www.google.com/maps/search/date+ideas+near+me","_blank");
+}
+
 function endGame(){
-  window.open("https://www.wikihow.com/Be-Single-and-Happy", "_blank");
+  window.open("https://www.wikihow.com/Be-Single-and-Happy","_blank");
 }
 </script>
 
