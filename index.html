@@ -6,117 +6,137 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
 <style>
-body {
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(180deg,#ff7a00 0%,#ff00c8 45%,#111 100%);
-  font-family: 'Press Start 2P', cursive;
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:radial-gradient(circle at center,#ff00c8 0%,#ff7a00 40%,#111 80%);
+  overflow:hidden;
+  font-family:'Press Start 2P', cursive;
 }
 
-/* Square arcade cabinet */
-.arcade {
-  width: 90vmin;
-  height: 90vmin;
-  max-width: 500px;
-  max-height: 500px;
-  background: black;
-  border: 6px solid limegreen;
-  box-shadow: 0 0 25px limegreen;
-  padding: 25px;
-  color: white;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
+/* Animated vaporwave grid */
+.grid{
+  position:fixed;
+  bottom:0;
+  width:200%;
+  height:60%;
+  background:
+    linear-gradient(to right, limegreen 1px, transparent 1px),
+    linear-gradient(to top, limegreen 1px, transparent 1px);
+  background-size:40px 40px;
+  transform:perspective(400px) rotateX(60deg);
+  animation:moveGrid 6s linear infinite;
+  opacity:0.4;
 }
 
-/* CRT overlay */
-.arcade::after {
-  content:"";
-  position:absolute;
+@keyframes moveGrid{
+  from{background-position:0 0;}
+  to{background-position:0 40px;}
+}
+
+/* Square cabinet */
+.arcade{
+  width:92vmin;
+  height:92vmin;
+  max-width:520px;
+  max-height:520px;
+  background:black;
+  border:6px solid limegreen;
+  box-shadow:0 0 25px limegreen;
+  padding:30px;
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  text-align:center;
+  position:relative;
+  z-index:2;
+}
+
+h1{
+  font-size:18px;
+  color:#ff7a00;
+  text-shadow:3px 3px limegreen;
+  margin-bottom:20px;
+}
+
+p{
+  font-size:12px;
+  line-height:1.6;
+}
+
+button{
+  background:black;
+  border:4px solid #ff7a00;
+  color:limegreen;
+  padding:14px;
+  margin:10px 0;
   width:100%;
-  height:100%;
-  background:repeating-linear-gradient(
-    rgba(0,0,0,0.25) 0px,
-    rgba(0,0,0,0.25) 2px,
-    transparent 2px,
-    transparent 4px
-  );
-  pointer-events:none;
+  font-size:12px;
+  cursor:pointer;
+  font-family:'Press Start 2P', cursive;
 }
 
-h1 {
-  font-size: 12px;
-  color: #ff7a00;
-  text-shadow: 3px 3px limegreen;
+button:hover{
+  background:limegreen;
+  color:black;
+  box-shadow:0 0 15px limegreen;
 }
 
-button {
-  background: black;
-  border: 4px solid #ff7a00;
-  color: limegreen;
-  padding: 12px;
-  margin: 8px 0;
-  width: 100%;
-  font-size: 8px;
-  font-family: 'Press Start 2P', cursive;
-  cursor: pointer;
+.hidden{display:none;}
+
+.options{
+  margin-top:10px;
+  font-size:11px;
+  line-height:1.8;
 }
 
-button:hover {
-  background: limegreen;
-  color: black;
-  box-shadow: 0 0 15px limegreen;
+.score{
+  margin:15px 0;
+  font-size:12px;
+  color:#ff7a00;
 }
 
-.hidden {
-  display: none;
+/* Coin */
+.coin-slot{
+  width:70px;
+  height:6px;
+  background:#333;
+  margin:20px auto;
+  position:relative;
 }
 
-/* Coin slot animation */
-.coin-slot {
-  width: 60px;
-  height: 6px;
-  background: #333;
-  margin: 20px auto;
-  position: relative;
+.coin{
+  width:20px;
+  height:20px;
+  background:orange;
+  border-radius:50%;
+  position:absolute;
+  top:-30px;
+  left:25px;
+  transition:0.6s;
 }
 
-.coin {
-  width: 18px;
-  height: 18px;
-  background: orange;
-  border-radius: 50%;
-  position: absolute;
-  top: -30px;
-  left: 21px;
-  transition: 0.6s;
-}
+.inserted{ top:2px; }
 
-.inserted {
-  top: 2px;
+/* Screenshot mode */
+.screenshot-mode .grid{
+  display:none;
 }
-
-.options {
-  margin-top: 10px;
-  font-size: 8px;
-  line-height: 1.6;
-}
-
-.options p {
-  margin: 6px 0;
+.screenshot-mode button{
+  display:none;
 }
 </style>
 </head>
 
 <body>
 
-<div class="arcade">
+<div class="grid"></div>
+
+<div class="arcade" id="arcade">
 
 <!-- START SCREEN -->
 <div id="startScreen">
@@ -132,59 +152,90 @@ button:hover {
 
 <!-- GAME SCREEN -->
 <div id="gameScreen" class="hidden">
+
   <h1>TALKING STAGE ACTIVE</h1>
 
-  <button onclick="toggleSection('complimentOptions')">
+  <div class="score">
+    Score: Effort <span id="score">0</span>/100
+  </div>
+
+  <button onclick="toggleSection('compliments',20)">
     GIVE COMPLIMENT
   </button>
-  <div id="complimentOptions" class="options hidden">
-    <p>1. I really like how your brain works.</p>
-    <p>2. You looked unreal the other night.</p>
-    <p>3. You have calming energy.</p>
+  <div id="compliments" class="options hidden">
+    <p>1. I like how your brain works.</p>
+    <p>2. You looked great in that photo.</p>
+    <p>3. I thought of [thing] and it made me think of you.</p>
   </div>
 
-  <button onclick="toggleSection('questionOptions')">
+  <button onclick="toggleSection('questions',20)">
     ASK QUESTION
   </button>
-  <div id="questionOptions" class="options hidden">
-    <p>1. What are you working towards this year?</p>
-    <p>2. What’s your ideal Sunday?</p>
-    <p>3. What’s something people misunderstand about you?</p>
+  <div id="questions" class="options hidden">
+    <p>1. What did you get up to this weekend?</p>
+    <p>2. What does your Costar say today?</p>
+    <p>3. Do you want to go on a date soon?</p>
   </div>
 
-  <button onclick="openDateIdeas()">
-    DATE IDEA
+  <button onclick="addScore(30)">
+    PLAN DATE
   </button>
 
   <button onclick="endGame()">
     END GAME
   </button>
-</div>
+
+  <button onclick="screenshotMode()">
+    SCREENSHOT MODE
+  </button>
 
 </div>
+</div>
+
+<audio id="coinSound">
+  <source src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3">
+</audio>
 
 <script>
-function insertCoin() {
-  const coin = document.getElementById("coin");
-  coin.classList.add("inserted");
+let score=0;
 
-  setTimeout(() => {
+function insertCoin(){
+  document.getElementById("coin").classList.add("inserted");
+  document.getElementById("coinSound").play();
+  setTimeout(()=>{
     document.getElementById("startScreen").classList.add("hidden");
     document.getElementById("gameScreen").classList.remove("hidden");
-  }, 600);
+  },600);
 }
 
-function toggleSection(id) {
-  const section = document.getElementById(id);
-  section.classList.toggle("hidden");
+function toggleSection(id,points){
+  const sections=["compliments","questions"];
+  sections.forEach(sec=>{
+    if(sec!==id){
+      document.getElementById(sec).classList.add("hidden");
+    }
+  });
+
+  const el=document.getElementById(id);
+  el.classList.toggle("hidden");
+
+  if(!el.classList.contains("hidden")){
+    addScore(points);
+  }
 }
 
-function openDateIdeas() {
-  window.open("https://www.google.com/maps/search/date+ideas+near+me", "_blank");
+function addScore(points){
+  score+=points;
+  if(score>100) score=100;
+  document.getElementById("score").innerText=score;
 }
 
-function endGame() {
-  window.open("https://www.wikihow.com/Be-Single-and-Happy", "_blank");
+function endGame(){
+  window.open("https://www.wikihow.com/Be-Single-and-Happy","_blank");
+}
+
+function screenshotMode(){
+  document.body.classList.toggle("screenshot-mode");
 }
 </script>
 
