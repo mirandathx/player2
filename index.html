@@ -66,18 +66,19 @@ body {
   overflow: hidden;
 }
 
-/* START SCREEN */
+/* START SCREEN FIX */
 #startScreen h1 {
-  font-size: 10vw; /* bigger title */
+  font-size: clamp(24px, 8vw, 50px); /* scales but capped */
   color: #ff7a00;
-  text-shadow: 3px 3px limegreen;
-  margin: 8px 0 16px 0;
+  text-shadow: 2px 2px limegreen;
+  margin: 8px 0 12px 0;
   line-height: 1.1;
+  text-align: center;
 }
 
 #startScreen p {
-  font-size: 4vw;
-  margin-bottom: 16px;
+  font-size: clamp(12px, 4vw, 20px);
+  margin-bottom: 12px;
 }
 
 button {
@@ -144,8 +145,8 @@ button:hover {
 
 /* Mobile font scaling */
 @media (max-width: 450px){
-  h1 { font-size:12vw; }
-  p { font-size:4vw; }
+  h1 { font-size: clamp(20px, 10vw, 50px); }
+  p { font-size: clamp(12px, 4vw, 18px); }
   button { font-size:4vw; padding:8px; }
   .score { font-size:4vw; }
   .scene { font-size:12vw; }
