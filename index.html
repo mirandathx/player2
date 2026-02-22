@@ -6,7 +6,6 @@
 <title>YOUR MOVE, PLAYER 2</title>
 
 <style>
-/* Arcade Classic font */
 @font-face {
   font-family: "ArcadeClassic";
   src: url("fonts/ArcadeClassic.woff2") format("woff2"),
@@ -21,7 +20,7 @@ body {
   display:flex;
   justify-content:center;
   align-items:center;
-  background:radial-gradient(circle at center,#ff00c8 0%,#ff7a00 40%,#111 80%);
+  background: radial-gradient(circle at center,#ff00c8 0%,#ff7a00 40%,#111 80%);
   overflow:hidden;
   font-family:"ArcadeClassic", monospace;
 }
@@ -36,8 +35,8 @@ body {
     linear-gradient(to right, limegreen 1px, transparent 1px),
     linear-gradient(to top, limegreen 1px, transparent 1px);
   background-size:40px 40px;
-  transform:perspective(400px) rotateX(60deg);
-  animation:moveGrid 6s linear infinite;
+  transform: perspective(400px) rotateX(60deg);
+  animation: moveGrid 6s linear infinite;
   opacity:0.4;
 }
 
@@ -46,23 +45,26 @@ body {
   to {background-position:0 40px;}
 }
 
-/* Arcade container */
+/* Arcade container responsive */
 .arcade {
-  width:94vmin;
-  height:94vmin;
-  max-width:520px;
-  max-height:520px;
-  background:black;
-  border:6px solid limegreen;
-  box-shadow:0 0 25px limegreen;
-  padding:20px;
-  color:white;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-start;
-  text-align:center;
-  position:relative;
-  z-index:2;
+  width: 90vw;
+  height: 90vh;
+  max-width: 520px;
+  max-height: 520px;
+  background: black;
+  border: 6px solid limegreen;
+  box-shadow: 0 0 25px limegreen;
+  padding: 16px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 h1 { font-size:28px; color:#ff7a00; text-shadow:2px 2px limegreen; margin-bottom:12px; }
@@ -72,7 +74,7 @@ button {
   background:black;
   border:3px solid #ff7a00;
   color:limegreen;
-  padding:12px;
+  padding:10px;
   margin:6px 0;
   width:100%;
   font-size:16px;
@@ -111,24 +113,32 @@ button:hover {
 
 .inserted { top:3px; }
 
-.scene { font-size:50px; margin:16px 0; }
+.scene { font-size:10vw; margin:16px 0; }
 
 /* Inline prompts */
 .prompt {
-  display:none;
-  flex-direction:column;
+  display: none;
+  flex-direction: column;
   justify-content:flex-start;
   align-items:flex-start;
   background:#111;
   border:2px solid limegreen;
-  padding:10px;
+  padding:8px;
   margin:6px 0;
   width:100%;
   max-height:35%;
   overflow-y:auto;
+  box-sizing:border-box;
 }
 .prompt p { margin:4px 0; font-size:14px; }
 
+/* Mobile adjustments */
+@media (max-width: 400px){
+  h1 { font-size:5vw; }
+  p { font-size:3.5vw; }
+  button { font-size:4vw; padding:8px; }
+  .score { font-size:4vw; }
+}
 </style>
 </head>
 <body>
