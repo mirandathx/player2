@@ -39,6 +39,7 @@ body {
   transform: perspective(400px) rotateX(60deg);
   animation: moveGrid 6s linear infinite;
   opacity:0.4;
+  pointer-events: none; /* clicks pass through */
 }
 
 @keyframes moveGrid {
@@ -81,6 +82,12 @@ body {
   margin-bottom: 12px;
 }
 
+/* Make button on top of coin */
+#startScreen button {
+  position: relative;
+  z-index: 2; /* clickable above coin */
+}
+
 button {
   background:black;
   border:3px solid #ff7a00;
@@ -109,6 +116,7 @@ button:hover {
   background:#333;
   margin:16px auto;
   position:relative;
+  z-index:1; /* behind button */
 }
 
 .coin {
@@ -120,6 +128,7 @@ button:hover {
   top:-34px;
   left:28px;
   transition:0.6s;
+  z-index:1;
 }
 
 .inserted { top:3px; }
