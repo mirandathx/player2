@@ -7,19 +7,38 @@
 
 <style>
 body {
-  margin:0;
-  padding:0;
-  font-family:'Press Start 2P', cursive;
-  background:linear-gradient(180deg,#ff7a00 0%,#ff00c8 45%,#111 100%);
-  color:white;
-  text-align:center;
-  overflow:hidden;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(180deg,#ff7a00 0%,#ff00c8 45%,#111 100%);
+  font-family: 'Press Start 2P', cursive;
 }
 
-/* CRT scanlines */
-body::after{
+/* Square arcade cabinet */
+.arcade {
+  width: 90vmin;
+  height: 90vmin;
+  max-width: 500px;
+  max-height: 500px;
+  background: black;
+  border: 6px solid limegreen;
+  box-shadow: 0 0 25px limegreen;
+  padding: 25px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+/* CRT overlay */
+.arcade::after {
   content:"";
-  position:fixed;
+  position:absolute;
   width:100%;
   height:100%;
   background:repeating-linear-gradient(
@@ -31,229 +50,141 @@ body::after{
   pointer-events:none;
 }
 
-.screen{
-  margin:60px auto;
-  background:rgba(0,0,0,0.9);
-  border:6px solid limegreen;
-  box-shadow:0 0 25px limegreen;
-  padding:30px 20px;
-  max-width:420px;
-  position:relative;
+h1 {
+  font-size: 12px;
+  color: #ff7a00;
+  text-shadow: 3px 3px limegreen;
 }
 
-h1{
-  font-size:13px;
-  color:#ff7a00;
-  text-shadow:3px 3px limegreen;
+button {
+  background: black;
+  border: 4px solid #ff7a00;
+  color: limegreen;
+  padding: 12px;
+  margin: 8px 0;
+  width: 100%;
+  font-size: 8px;
+  font-family: 'Press Start 2P', cursive;
+  cursor: pointer;
 }
 
-button{
-  background:black;
-  border:4px solid #ff7a00;
-  color:limegreen;
-  padding:14px;
-  margin:10px 0;
-  width:100%;
-  font-size:8px;
-  font-family:'Press Start 2P', cursive;
-  cursor:pointer;
+button:hover {
+  background: limegreen;
+  color: black;
+  box-shadow: 0 0 15px limegreen;
 }
 
-button:hover{
-  background:limegreen;
-  color:black;
-  box-shadow:0 0 15px limegreen;
+.hidden {
+  display: none;
 }
 
-.hidden{display:none;}
-
-.meter{
-  background:black;
-  border:3px solid white;
-  height:20px;
-  margin:15px 0;
+/* Coin slot animation */
+.coin-slot {
+  width: 60px;
+  height: 6px;
+  background: #333;
+  margin: 20px auto;
+  position: relative;
 }
 
-.fill{
-  height:100%;
-  width:0%;
-  background:limegreen;
-  transition:width 0.4s;
+.coin {
+  width: 18px;
+  height: 18px;
+  background: orange;
+  border-radius: 50%;
+  position: absolute;
+  top: -30px;
+  left: 21px;
+  transition: 0.6s;
 }
 
-.popup{
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:black;
-  border:3px solid #ff7a00;
-  padding:10px;
-  font-size:8px;
-  display:none;
+.inserted {
+  top: 2px;
 }
 
-.glitch{
-  animation:glitch 0.2s infinite;
+.options {
+  margin-top: 10px;
+  font-size: 8px;
+  line-height: 1.6;
 }
 
-@keyframes glitch{
-  0%{transform:translate(1px,-1px);}
-  50%{transform:translate(-1px,1px);}
-  100%{transform:translate(0);}
-}
-
-.heart{
-  position:fixed;
-  color:hotpink;
-  animation:floatUp 2s linear forwards;
-}
-
-@keyframes floatUp{
-  from{opacity:1; transform:translateY(0);}
-  to{opacity:0; transform:translateY(-150px);}
-}
-
-/* Insert coin screen */
-#startScreen{
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:black;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-}
-
-.blink{
-  animation:blink 1s infinite;
-}
-
-@keyframes blink{
-  0%,100%{opacity:1;}
-  50%{opacity:0.3;}
+.options p {
+  margin: 6px 0;
 }
 </style>
 </head>
 
 <body>
 
+<div class="arcade">
+
+<!-- START SCREEN -->
 <div id="startScreen">
   <h1>PLAYER 2: YOUR MOVE</h1>
-  <p class="blink">INSERT COIN</p>
-  <button onclick="startGame()">START</button>
-</div>
+  <p>INSERT COIN</p>
 
-<div class="screen hidden" id="gameScreen">
-  <h1>TALKING STAGE ACTIVE</h1>
-
-  <div class="meter">
-    <div id="effortBar" class="fill"></div>
+  <div class="coin-slot">
+    <div id="coin" class="coin"></div>
   </div>
 
-  <p>Consistency Score: <span id="score">0</span></p>
-  <p>Response Timer: <span id="timer">30</span>s</p>
-
-  <button onclick="task('compliment')">GIVE COMPLIMENT</button>
-  <button onclick="task('question')">ASK QUESTION</button>
-  <button onclick="dateMode()">PLAN DATE</button>
-  <button onclick="endGame()">END GAME</button>
+  <button onclick="insertCoin()">START GAME</button>
 </div>
 
-<div id="popup" class="popup"></div>
+<!-- GAME SCREEN -->
+<div id="gameScreen" class="hidden">
+  <h1>TALKING STAGE ACTIVE</h1>
 
-<audio id="clickSound">
-  <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3">
-</audio>
+  <button onclick="toggleSection('complimentOptions')">
+    GIVE COMPLIMENT
+  </button>
+  <div id="complimentOptions" class="options hidden">
+    <p>1. I really like how your brain works.</p>
+    <p>2. You looked unreal the other night.</p>
+    <p>3. You have calming energy.</p>
+  </div>
+
+  <button onclick="toggleSection('questionOptions')">
+    ASK QUESTION
+  </button>
+  <div id="questionOptions" class="options hidden">
+    <p>1. What are you working towards this year?</p>
+    <p>2. What’s your ideal Sunday?</p>
+    <p>3. What’s something people misunderstand about you?</p>
+  </div>
+
+  <button onclick="openDateIdeas()">
+    DATE IDEA
+  </button>
+
+  <button onclick="endGame()">
+    END GAME
+  </button>
+</div>
+
+</div>
 
 <script>
-let effort = localStorage.getItem("effort") || 0;
-let score = localStorage.getItem("score") || 0;
-let timer = 30;
-let timerInterval;
+function insertCoin() {
+  const coin = document.getElementById("coin");
+  coin.classList.add("inserted");
 
-document.getElementById("effortBar").style.width = effort + "%";
-document.getElementById("score").innerText = score;
-
-function startGame(){
-  document.getElementById("startScreen").classList.add("hidden");
-  document.getElementById("gameScreen").classList.remove("hidden");
-  startTimer();
+  setTimeout(() => {
+    document.getElementById("startScreen").classList.add("hidden");
+    document.getElementById("gameScreen").classList.remove("hidden");
+  }, 600);
 }
 
-function playSound(){
-  document.getElementById("clickSound").play();
+function toggleSection(id) {
+  const section = document.getElementById(id);
+  section.classList.toggle("hidden");
 }
 
-function task(type){
-  playSound();
-  effort = parseInt(effort) + 20;
-  score = parseInt(score) + 10;
-  if(effort > 100) effort = 100;
-
-  updateStats();
-  popup("ACHIEVEMENT UNLOCKED");
-  heart();
-
-  if(effort < 25){
-    npcMode();
-  }
+function openDateIdeas() {
+  window.open("https://www.google.com/maps/search/date+ideas+near+me", "_blank");
 }
 
-function dateMode(){
-  playSound();
-  effort = parseInt(effort) + 30;
-  score = parseInt(score) + 20;
-  updateStats();
-  popup("DATE MODE ACTIVATED");
-  window.open("https://www.google.com/maps/search/date+ideas+near+me");
-}
-
-function updateStats(){
-  document.getElementById("effortBar").style.width = effort + "%";
-  document.getElementById("score").innerText = score;
-  localStorage.setItem("effort", effort);
-  localStorage.setItem("score", score);
-}
-
-function popup(text){
-  let p = document.getElementById("popup");
-  p.innerText = text;
-  p.style.display = "block";
-  setTimeout(()=>p.style.display="none",2000);
-}
-
-function heart(){
-  let h = document.createElement("div");
-  h.className="heart";
-  h.innerText="❤";
-  h.style.left=Math.random()*window.innerWidth+"px";
-  h.style.bottom="0px";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),2000);
-}
-
-function startTimer(){
-  timerInterval = setInterval(()=>{
-    timer--;
-    document.getElementById("timer").innerText = timer;
-    if(timer <= 0){
-      npcMode();
-    }
-  },1000);
-}
-
-function npcMode(){
-  popup("NPC MODE ACTIVATED");
-  document.querySelector(".screen").classList.add("glitch");
-  setTimeout(()=>{
-    window.location.href="single.html";
-  },2000);
-}
-
-function endGame(){
-  npcMode();
+function endGame() {
+  window.open("https://www.wikihow.com/Be-Single-and-Happy", "_blank");
 }
 </script>
 
