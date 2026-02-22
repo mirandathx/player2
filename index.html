@@ -2,9 +2,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Player 2: Your Move</title>
+<title>Your Move, Player 2🌹</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-
 <style>
 body{
   margin:0;
@@ -14,7 +13,7 @@ body{
   align-items:center;
   background:radial-gradient(circle at center,#ff00c8 0%,#ff7a00 40%,#111 80%);
   overflow:hidden;
-  font-family:'Press Start 2P', cursive;
+  font-family:'Press Start', cursive;
 }
 
 /* Animated vaporwave grid */
@@ -77,7 +76,6 @@ button{
   width:100%;
   font-size:12px;
   cursor:pointer;
-  font-family:'Press Start 2P', cursive;
 }
 
 button:hover{
@@ -122,98 +120,94 @@ button:hover{
 
 .inserted{ top:2px; }
 
-/* Screenshot mode */
-.screenshot-mode .grid{
-  display:none;
-}
-.screenshot-mode button{
-  display:none;
-}
 </style>
 </head>
-
 <body>
 
 <div class="grid"></div>
 
 <div class="arcade" id="arcade">
 
-<!-- START SCREEN -->
-<div id="startScreen">
-  <h1>PLAYER 2: YOUR MOVE</h1>
-  <br>
-  <p>INSERT COIN</p>
+  <!-- START SCREEN -->
+  <div id="startScreen">
+    <h1>YOUR MOVE, PLAYER 2🌹</h1>
+    <br>
+    <p>INSERT COIN</p>
 
-  <div class="coin-slot">
-    <div id="coin" class="coin"></div>
+    <div class="coin-slot">
+      <div id="coin" class="coin"></div>
+    </div>
+
+    <button id="startButton">START GAME</button>
   </div>
 
-  <button onclick="insertCoin()">START GAME</button>
+  <!-- GAME SCREEN -->
+  <div id="gameScreen" class="hidden">
+
+    <h1>TALKING STAGE ACTIVE</h1>
+
+    <div class="score">
+      Score: Effort <span id="score">0</span>/100
+    </div>
+
+    <button onclick="toggleSection('compliments',20)">
+      GIVE COMPLIMENT
+    </button>
+    <div id="compliments" class="options hidden">
+      <p>1. I like how your brain works.</p>
+      <p>2. You looked great in that photo.</p>
+      <p>3. I thought of [thing] and it made me think of you.</p>
+    </div>
+
+    <button onclick="toggleSection('questions',20)">
+      ASK QUESTION
+    </button>
+    <div id="questions" class="options hidden">
+      <p>1. What did you get up to this weekend?</p>
+      <p>2. What does your Costar say today?</p>
+      <p>3. Do you want to go on a date soon?</p>
+    </div>
+
+    <button onclick="addScore(30)">
+      PLAN DATE
+    </button>
+
+    <button onclick="endGame()">
+      END GAME
+    </button>
+
+  </div>
 </div>
 
-<!-- GAME SCREEN -->
-<div id="gameScreen" class="hidden">
-
-  <h1>TALKING STAGE ACTIVE</h1>
-
-  <div class="score">
-    Score: Effort <span id="score">0</span>/100
-  </div>
-
-  <button onclick="toggleSection('compliments',20)">
-    GIVE COMPLIMENT
-  </button>
-  <div id="compliments" class="options hidden">
-    <p>1. I like how your brain works.</p>
-    <p>2. You looked great in that photo.</p>
-    <p>3. I thought of [thing] and it made me think of you.</p>
-  </div>
-
-  <button onclick="toggleSection('questions',20)">
-    ASK QUESTION
-  </button>
-  <div id="questions" class="options hidden">
-    <p>1. What did you get up to this weekend?</p>
-    <p>2. What does your Costar say today?</p>
-    <p>3. Do you want to go on a date soon?</p>
-  </div>
-
-  <button onclick="addScore(30)">
-    PLAN DATE
-  </button>
-
-  <button onclick="endGame()">
-    END GAME
-  </button>
-
-</div>
-</div>
-
-<audio id="coinSound">
-  <source src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3">
-</audio>
+<audio id="coinSound" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"></audio>
 
 <script>
-let score=0;
+let score = 0;
 
-function insertCoin(){
-  document.getElementById("coin").classList.add("inserted");
-  document.getElementById("coinSound").play();
-  setTimeout(()=>{
+// START GAME BUTTON
+document.getElementById("startButton").addEventListener("click", function(){
+  const coin = document.getElementById("coin");
+  const sound = document.getElementById("coinSound");
+
+  coin.classList.add("inserted");
+  sound.currentTime = 0; // reset sound
+  sound.play();
+
+  setTimeout(() => {
     document.getElementById("startScreen").classList.add("hidden");
     document.getElementById("gameScreen").classList.remove("hidden");
-  },600);
-}
+  }, 600);
+});
 
-function toggleSection(id,points){
+function toggleSection(id, points){
   const sections=["compliments","questions"];
-  sections.forEach(sec=>{
-    if(sec!==id){
+  sections.forEach(sec => {
+    if(sec !== id){
       document.getElementById(sec).classList.add("hidden");
     }
   });
 
-  const el=document.getElementById(id);
+  const el = document.getElementById(id);
   el.classList.toggle("hidden");
 
   if(!el.classList.contains("hidden")){
@@ -222,62 +216,13 @@ function toggleSection(id,points){
 }
 
 function addScore(points){
-  score+=points;
-  if(score>100) score=100;
-  document.getElementById("score").innerText=score;
+  score += points;
+  if(score > 100) score = 100;
+  document.getElementById("score").innerText = score;
 }
 
 function endGame(){
-  window.open("https://www.wikihow.com/Be-Single-and-Happy","_blank");
-}
-
-function screenshotMode(){
-  document.body.classList.toggle("screenshot-mode");
-
-  <script>
-let score=0;
-
-function insertCoin(){
-  document.getElementById("coin").classList.add("inserted");
-  document.getElementById("coinSound").play();
-  setTimeout(()=>{
-    document.getElementById("startScreen").classList.add("hidden");
-    document.getElementById("gameScreen").classList.remove("hidden");
-  },600);
-}
-
-function openSection(id,points){
-  document.getElementById("clickSound").play();
-
-  const sections=["compliments","questions"];
-  sections.forEach(sec=>{
-    document.getElementById(sec).classList.add("hidden");
-  });
-
-  document.getElementById(id).classList.remove("hidden");
-  addScore(points);
-}
-
-function back(){
-  document.getElementById("clickSound").play();
-  document.getElementById("compliments").classList.add("hidden");
-  document.getElementById("questions").classList.add("hidden");
-}
-
-function addScore(points){
-  score+=points;
-  if(score>100) score=100;
-  document.getElementById("score").innerText=score;
-}
-
-function planDate(){
-  document.getElementById("clickSound").play();
-  addScore(30);
-  window.open("https://www.google.com/maps/search/date+ideas+near+me","_blank");
-}
-}
-</script>
-
+  window.open("https://www.wikihow.com/Be-Single-and-Happy", "_blank");
 }
 </script>
 
