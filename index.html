@@ -4,10 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Player 2: Your Move</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
+<!-- True pixel arcade font -->
 <style>
-body{
+@font-face {
+  font-family: 'PixelArcade';
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/arcade-font/1.4.0/ARCADECLASSIC.woff2') format('woff2'),
+       url('https://cdnjs.cloudflare.com/ajax/libs/arcade-font/1.4.0/ARCADECLASSIC.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
   margin:0;
   height:100vh;
   display:flex;
@@ -15,7 +23,7 @@ body{
   align-items:center;
   background:radial-gradient(circle at center,#ff00c8 0%,#ff7a00 40%,#111 80%);
   overflow:hidden;
-  font-family:'Press Start 2P', monospace;
+  font-family:'PixelArcade', monospace;
 }
 
 /* Vaporwave grid */
@@ -33,13 +41,13 @@ body{
   opacity:0.4;
 }
 
-@keyframes moveGrid{
-  from{background-position:0 0;}
-  to{background-position:0 40px;}
+@keyframes moveGrid {
+  from {background-position:0 0;}
+  to {background-position:0 40px;}
 }
 
 /* Arcade square */
-.arcade{
+.arcade {
   width:94vmin;
   height:94vmin;
   max-width:520px;
@@ -58,54 +66,53 @@ body{
 }
 
 /* Headings */
-h1{
-  font-size:28px;
+h1 {
+  font-size:30px;
   color:#ff7a00;
   text-shadow:3px 3px limegreen;
   margin-bottom:18px;
+  font-family:'PixelArcade', monospace;
 }
 
 /* Paragraph text */
-p{
-  font-size:16px;
-  line-height:1.8;
+p {
+  font-size:18px;
 }
 
 /* Buttons */
-button{
+button {
   background:black;
   border:4px solid #ff7a00;
   color:limegreen;
   padding:18px;
   margin:10px 0;
   width:100%;
-  font-size:16px;
+  font-size:18px;
   cursor:pointer;
-  font-family:'Press Start 2P', monospace;
+  font-family:'PixelArcade', monospace;
 }
 
-button:hover{
+button:hover {
   background:limegreen;
   color:black;
   box-shadow:0 0 15px limegreen;
 }
 
-.hidden{display:none;}
+.hidden {display:none;}
 
-.options{
-  font-size:15px;
+.options {
+  font-size:17px;
   margin-top:12px;
   line-height:2;
 }
 
-.score{
+.score {
   margin:14px 0;
-  font-size:18px;
+  font-size:22px;
   color:#ff7a00;
 }
 
-/* Coin slot */
-.coin-slot{
+.coin-slot {
   width:80px;
   height:8px;
   background:#333;
@@ -113,7 +120,7 @@ button:hover{
   position:relative;
 }
 
-.coin{
+.coin {
   width:24px;
   height:24px;
   background:orange;
@@ -124,12 +131,12 @@ button:hover{
   transition:0.6s;
 }
 
-.inserted{ top:3px; }
+.inserted { top:3px; }
 
 /* Pixel texting scene */
-.scene{
-  font-size:56px;
-  margin:18px 0;
+.scene {
+  font-size:60px;
+  margin:20px 0;
 }
 </style>
 </head>
@@ -187,13 +194,18 @@ button:hover{
 </div>
 </div>
 
-<!-- Sound effects only -->
+<!-- Sound effects -->
 <audio id="coinSound">
   <source src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3">
 </audio>
-
 <audio id="clickSound">
   <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3">
+</audio>
+<audio id="complimentSound">
+  <source src="https://assets.mixkit.co/active_storage/sfx/3159/3159-preview.mp3" type="audio/mpeg">
+</audio>
+<audio id="questionSound">
+  <source src="https://assets.mixkit.co/active_storage/sfx/3160/3160-preview.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -218,6 +230,10 @@ function openSection(id,points){
 
   document.getElementById(id).classList.remove("hidden");
   addScore(points);
+
+  // Play giggle sounds
+  if(id==="compliments") document.getElementById("complimentSound").play();
+  if(id==="questions") document.getElementById("questionSound").play();
 }
 
 function back(){
