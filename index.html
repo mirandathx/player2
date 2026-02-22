@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YOUR MOVE, PLAYER 2</title>
+<title>YOUR MOVE PLAYER 2</title>
 
 <!-- Pixel arcade font -->
 <style>
@@ -202,6 +202,9 @@ button:hover {
 <audio id="questionSound">
   <source src="https://assets.mixkit.co/active_storage/sfx/3160/3160-preview.mp3" type="audio/mpeg">
 </audio>
+<audio id="bgMusic" loop>
+  <source src="https://assets.mixkit.co/active_storage/music/preview/mixkit-vaporwave-chill-1207.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 let score=0;
@@ -209,9 +212,16 @@ let score=0;
 function insertCoin(){
   document.getElementById("coin").classList.add("inserted");
   document.getElementById("coinSound").play();
+  
   setTimeout(()=>{
     document.getElementById("startScreen").classList.add("hidden");
     document.getElementById("gameScreen").classList.remove("hidden");
+    
+    // Start vaporwave background music
+    const bgMusic = document.getElementById("bgMusic");
+    bgMusic.volume = 0.25; // adjust volume as needed
+    bgMusic.play();
+    
   },600);
 }
 
