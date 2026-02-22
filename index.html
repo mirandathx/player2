@@ -26,6 +26,7 @@ body{
   .score{ font-size:1.5rem; }
   .coin-slot{ width:90px; height:12px; }
   .coin{ width:30px; height:30px; top:-40px; left:30px; }
+  .sprites img{ width:60px; height:60px; margin:0 5px; }
 }
 
 @media (min-width:901px){
@@ -33,6 +34,7 @@ body{
   h1{ font-size:3rem; }
   button{ font-size:1.3rem; padding:1.2rem; }
   .score{ font-size:1.6rem; }
+  .sprites img{ width:80px; height:80px; margin:0 10px; }
 }
 
 .grid{
@@ -68,6 +70,7 @@ body{
   display:flex;
   flex-direction:column;
   justify-content:center;
+  align-items:center;
 }
 
 h1{
@@ -133,6 +136,16 @@ button:hover{
 }
 
 .inserted{ top:2px; }
+
+.sprites{
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  margin-bottom:1rem;
+}
+.sprites img{
+  display:block;
+}
 </style>
 </head>
 
@@ -142,9 +155,15 @@ button:hover{
 
 <div class="arcade">
 
+  <!-- START SCREEN -->
   <div id="startScreen">
     <h1>PLAYER 2: YOUR MOVE</h1>
     <p>INSERT COIN</p>
+
+    <div class="sprites">
+      <img src="https://i.ibb.co/f0J7qPx/8bit-man.png" alt="8-bit man">
+      <img src="https://i.ibb.co/5YnHqKv/8bit-woman.png" alt="8-bit woman">
+    </div>
 
     <div class="coin-slot">
       <div id="coin" class="coin"></div>
@@ -153,8 +172,14 @@ button:hover{
     <button id="startButton">START GAME</button>
   </div>
 
+  <!-- GAME SCREEN -->
   <div id="gameScreen" class="hidden">
     <h1>TALKING STAGE ACTIVE</h1>
+
+    <div class="sprites">
+      <img src="https://i.ibb.co/f0J7qPx/8bit-man.png" alt="8-bit man">
+      <img src="https://i.ibb.co/5YnHqKv/8bit-woman.png" alt="8-bit woman">
+    </div>
 
     <div class="score">Score: Effort <span id="score">0</span>/100</div>
 
